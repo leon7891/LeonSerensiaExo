@@ -1,6 +1,6 @@
 ﻿namespace LeonSerensiaExo.Business
 {
-    public class WordHelper : IAmTheTest
+    public class WordMatcher : IAmTheTest
     {
         /// <summary>
         /// Get suggestions from choices based on their similarity to the term.

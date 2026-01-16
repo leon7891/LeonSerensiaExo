@@ -2,13 +2,13 @@
 
 namespace LeonSerensia.Test
 {
-    public class WordHelper_should
+    public class WordMatcher_should
     {
         private IAmTheTest _wordHelper;
 
-        public WordHelper_should()
+        public WordMatcher_should()
         {
-            _wordHelper = new WordHelper();
+            _wordHelper = new WordMatcher();
         }
 
         [Fact]
