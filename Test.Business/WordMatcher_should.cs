@@ -17,9 +17,12 @@ namespace LeonSerensia.Test
             var term = "gros";
             var choices = new List<string> { "gros", "gras", "graisse", "agressif", "go", "ros", "gro" };
 
-            var suggestions = 2;
+            var suggestions = 1;
             var result = _wordHelper.GetSuggestions(term, choices, suggestions);
-            Assert.NotEqual(result, new List<string> { "anything", "anotherthing" });
+            Assert.Equal(new List<string> { "gros" }, result);
+
+            suggestions = 2;
+            result = _wordHelper.GetSuggestions(term, choices, suggestions);
             Assert.Equal(new List<string> { "gros", "gras" }, result);
 
             suggestions = 4;
@@ -77,7 +80,7 @@ namespace LeonSerensia.Test
         [Fact]
         public void Throw_argument_out_of_range_exception_on_empty_word()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            Assert.Throws<ArgumentException>(() =>
             {
                 _wordHelper.GetSuggestions("", new string[] { "choice", "choice2" }, 2);
             });
@@ -86,9 +89,23 @@ namespace LeonSerensia.Test
         [Fact]
         public void Throw_argument_exception_on_empty_choices()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            Assert.Throws<ArgumentException>(() =>
             {
                 _wordHelper.GetSuggestions("anything", new string[] { }, 2);
+            });
+        }
+
+        [Fact]
+        public void Throw_argument_outofrange_about_suggestions()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                _wordHelper.GetSuggestions("anything", new string[] { "any" }, 0);
+            });
+
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                _wordHelper.GetSuggestions("anything", new string[] { "any" }, -50);
             });
         }
     }

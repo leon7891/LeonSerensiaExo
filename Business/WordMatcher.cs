@@ -12,7 +12,7 @@
         public IEnumerable<string> GetSuggestions(string term, IEnumerable<string> choices, int numberOfSuggestions)
         {
             if (term.Trim() == String.Empty)
-                throw new ArgumentOutOfRangeException("Term cannot be empty.");
+                throw new ArgumentException("Term must not be empty.");
 
             Check(choices);
 
@@ -22,7 +22,7 @@
             return
                 choices
                 .Where(c => c.Length >= term.Length)
-                .Select(c => (choice: c, score: GetDifferenceScore(term, c)))
+                .Select(c => (choice: c, score: GetBestScoreOf(term, c)))
                 .Where(c => c.score < term.Length)
                 .OrderBy(c => c.score)
                 .ThenBy(c => c.choice.Length)
@@ -34,20 +34,20 @@
         private void Check(IEnumerable<string> choices)
         {
             if (!choices.Any())
-                throw new ArgumentOutOfRangeException("Choices cannot be empty.");
+                throw new ArgumentException("Choices must not be empty.");
             else if (choices.Any(c => !c.Equals(c.ToLower())))
                 throw new ArgumentException("All choices must be in lowercase.");
             else if (choices.Any(c => c.Trim() == String.Empty))
-                throw new ArgumentException("Choices cannot contain empty words.");
+                throw new ArgumentException("Choices must not contain empty words.");
         }
 
-        private int GetDifferenceScore(string src, string container)
+        private int GetBestScoreOf(string src, string container)
         {
             var bestScore = src.Length;
 
             for (int containerIndex = 0; containerIndex < container.Length; containerIndex++)
             {
-                var score = CheckSourceDifferences(src, container.Substring(containerIndex));
+                var score = CountDifferencesOf(src, container.Substring(containerIndex));
                 if (score < bestScore)
                     bestScore = score;
             }
@@ -55,7 +55,7 @@
             return bestScore;
         }
 
-        private int CheckSourceDifferences(string src, string container)
+        private int CountDifferencesOf(string src, string container)
         {
             int differenceCount = src.Length;
 
